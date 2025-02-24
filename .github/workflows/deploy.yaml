@@ -63,7 +63,7 @@ jobs:
       - name: Zip the application
         run: zip -r flask-app.zip .
 
-      - name: Zip Dockerrun.aws.json separately
+      - name: Zip Dockerrun.aws.json
         run: zip dockerrun.zip Dockerrun.aws.json
 
       - name: Upload ZIP to S3
