@@ -63,12 +63,15 @@ jobs:
       - name: Zip the application
         run: zip -r flask-app.zip .
 
+      - name: Zip Dockerrun.aws.json separately
+        run: zip dockerrun.zip Dockerrun.aws.json
+
       - name: Upload ZIP to S3
         run: |
           aws s3 cp flask-app.zip s3://${{ secrets.S3_BUCKET_NAME }}/flask-app.zip
+          aws s3 cp dockerrun.zip s3://${{ secrets.S3_BUCKET_NAME }}/dockerrun.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-
