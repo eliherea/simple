@@ -1,0 +1,59 @@
+Resources:
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: DB subnet group
+      SubnetIds:
+        - subnet-01eef0408ef569241
+        - subnet-0bca871002a4dbbc5
+        - subnet-0672daed9a437f655
+  
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow port 3306
+      VpcId: vpc-06b9958e203feae54
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SGroup-rds
+  
+  DBCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-mysql
+      EngineMode: provisioned
+      DBClusterIdentifier: database-1
+      DatabaseName: lks_db
+      MasterUsername: admin
+      MasterUserPassword: ambatukam
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      VpcSecurityGroupIds:
+        - !Ref DBSecurityGroup
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 02:00-03:00
+      PreferredMaintenanceWindow: Sun:03:00-Sun:04:00
+
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.medium
+      Engine: aurora-mysql
+      DBClusterIdentifier: !Ref DBCluster
+      MultiAZ: false
+      PubliclyAccessible: true
+      DBSubnetGroupName: !Ref DBSubnetGroup
+  
+  DBInstance2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.medium
+      Engine: aurora-mysql
+      DBClusterIdentifier: !Ref DBCluster
+      MultiAZ: false
+      PubliclyAccessible: true
+      DBSubnetGroupName: !Ref DBSubnetGroup
